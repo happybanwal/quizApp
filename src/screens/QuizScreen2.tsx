@@ -20,12 +20,12 @@ const QuizScreen2 = () => {
   const navigation = useNavigation<homeScreenProps>();
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState("");
 
   const [currentOptionSelected, setCurrentOptionSelected] = useState(null);
   const [correctOption, setCorrectOption] = useState(null);
   const [isOptionsDisabled, setIsOptionsDisabled] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [correctAnswer, setCorrectAnswer] = useState([]);
 
   const handleValidate = (option: string) => {
     let correctAns = questions[currentIndex].answer;
@@ -34,18 +34,31 @@ const QuizScreen2 = () => {
     setCurrentOptionSelected(option);
     setCorrectOption(correctAns);
     setIsOptionsDisabled(true);
+
+    const isCorrect = option === correctAns;
+    setCorrectAnswer([...correctAnswer,isCorrect])
   };
 
   const handleNext = () => {
-    console.log("next");
+    if (currentIndex == questions.length - 1) {
+      console.log("reached last");
+    } else {
+      setCurrentIndex(currentIndex + 1);
+      setCurrentOptionSelected(null);
+      setCorrectOption(null);
+      setIsOptionsDisabled(false);
+    }
   };
+  
+
+  console.log(correctAnswer)
 
   return (
     <TouchableWithoutFeedback>
       <SafeAreaView className="flex-1 bg-[#131830] p-6   ">
         {/* top bar */}
-        <View className=" flex-none border border-gray-500 p-2">
-          <View className=" justify-center border border-gray-500 ">
+        <View className=" flex-none  p-2">
+          <View className=" justify-center  ">
             <MaterialCommunityIcons
               name="chevron-left-circle"
               size={30}
@@ -59,18 +72,31 @@ const QuizScreen2 = () => {
         {/* top bar */}
 
         {/* 2nd half */}
-        <View className="  flex-1 border border-gray-500 p-2 justify-between">
+        <View className="  flex-1  p-2 justify-between">
           {/* header */}
-          <View className="border border-gray-500 ">
+          <View className="0 ">
             <Text className="text-white text-slate-500">Review Test</Text>
             <Text className="text-white text-[35px] font-bold">
               Question {currentIndex + 1}/{questions?.length}{" "}
             </Text>
+            <View className="flex-row w-full relative  justify-evenly mt-2">
+              {questions.map((items, i) => (
+                <View
+                  key={i}
+                  style={{
+                    backgroundColor: correctAnswer[i]==null ? "white" : correctAnswer[i]==true ? "green" : correctAnswer[i]==false ? "red" :"",
+                  }}
+                  className=" flex-row mr-2 justify-between w-[20px] h-[4px]"
+                >
+                  {/* Your content for each item */}
+                </View>
+              ))}
+            </View>
           </View>
           {/* header */}
 
           {/* body */}
-          <View className="border border-gray-500 ">
+          <View className=" ">
             <Text className="text-white w-auto relative text-xl font-bold mb-4">
               {questions[currentIndex]?.question}
             </Text>
@@ -79,7 +105,7 @@ const QuizScreen2 = () => {
                 <View key={i}>
                   <TouchableOpacity
                     disabled={isOptionsDisabled}
-                    className="border border-white p-2 mt-2 mb-2 "
+                    className="border border-white p-2 mt-2 mb-2 rounded-[8px]"
                     style={{
                       borderColor:
                         option === correctOption
@@ -102,9 +128,8 @@ const QuizScreen2 = () => {
 
           {/* footer */}
           {/* hint */}
-          
           <View className="flex-row justify-end">
-            <TouchableOpacity className="border border-gray-500   ">
+            <TouchableOpacity className="   ">
               <MaterialCommunityIcons
                 name="information-outline"
                 size={30}
@@ -118,7 +143,7 @@ const QuizScreen2 = () => {
           {/* hint */}
 
           {/* next */}
-          <View className="border border-gray-500  ">
+          <View className=" ">
             <CommonButton text="Next" onPress={handleNext} />
           </View>
           {/* next */}

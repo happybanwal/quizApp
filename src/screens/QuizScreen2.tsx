@@ -36,12 +36,13 @@ const QuizScreen2 = () => {
     setIsOptionsDisabled(true);
 
     const isCorrect = option === correctAns;
-    setCorrectAnswer([...correctAnswer,isCorrect])
+    setCorrectAnswer([...correctAnswer, isCorrect]);
   };
 
   const handleNext = () => {
     if (currentIndex == questions.length - 1) {
       console.log("reached last");
+      
     } else {
       setCurrentIndex(currentIndex + 1);
       setCurrentOptionSelected(null);
@@ -49,9 +50,8 @@ const QuizScreen2 = () => {
       setIsOptionsDisabled(false);
     }
   };
-  
 
-  console.log(correctAnswer)
+  console.log({ correctAnswer });
 
   return (
     <TouchableWithoutFeedback>
@@ -84,7 +84,14 @@ const QuizScreen2 = () => {
                 <View
                   key={i}
                   style={{
-                    backgroundColor: correctAnswer[i]==null ? "white" : correctAnswer[i]==true ? "green" : correctAnswer[i]==false ? "red" :"",
+                    backgroundColor:
+                      correctAnswer[i] == null
+                        ? "white"
+                        : correctAnswer[i] == true
+                        ? "green"
+                        : correctAnswer[i] == false
+                        ? "red"
+                        : "",
                   }}
                   className=" flex-row mr-2 justify-between w-[20px] h-[4px]"
                 >
@@ -105,7 +112,7 @@ const QuizScreen2 = () => {
                 <View key={i}>
                   <TouchableOpacity
                     disabled={isOptionsDisabled}
-                    className="border border-white p-2 mt-2 mb-2 rounded-[8px]"
+                    className="border border-white p-2 mt-2 mb-2 rounded-[8px] flex-row justify-between"
                     style={{
                       borderColor:
                         option === correctOption
@@ -118,7 +125,33 @@ const QuizScreen2 = () => {
                       handleValidate(option);
                     }}
                   >
-                    <Text className="text-white">{option}</Text>
+                    <Text className="text-white ">{option}</Text>
+                    <View
+                      className={`border border-gray-500 rounded-full w-5 h-5 items-center justify-center ${
+                        isOptionsDisabled
+                          ? correctOption === option
+                            ? "bg-green-500"
+                            : currentOptionSelected === option
+                            ? "bg-red-500"
+                            : ""
+                          : ""
+                      }`}
+                    >
+                      {isOptionsDisabled && correctOption === option && (
+                        <MaterialCommunityIcons
+                          name={"check"}
+                          color={"white"}
+                        />
+                      )}
+                      {isOptionsDisabled &&
+                        correctOption !== option &&
+                        currentOptionSelected === option && (
+                          <MaterialCommunityIcons
+                            name={"close"}
+                            color={"white"}
+                          />
+                        )}
+                    </View>
                   </TouchableOpacity>
                 </View>
               </>
